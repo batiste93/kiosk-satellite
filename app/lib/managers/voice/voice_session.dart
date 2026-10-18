@@ -71,6 +71,7 @@ class VoiceSessionOptions {
   const VoiceSessionOptions({
     this.seamless = false,
     this.wakeSound = true,
+    this.followupAlways = false,
     this.followupDelayMs = 0,
     this.followupChime = false,
     this.answerLingerSeconds = 0,
@@ -82,6 +83,10 @@ class VoiceSessionOptions {
 
   final bool seamless;
   final bool wakeSound;
+
+  /// Listen again after every played answer, not only when Home Assistant
+  /// marks the answer as a question (`continue_conversation`).
+  final bool followupAlways;
   final int followupDelayMs;
   final bool followupChime;
   final int answerLingerSeconds;
@@ -177,6 +182,11 @@ class VoiceSession {
   static const dedupeWindow = Duration(milliseconds: 250);
   static const chimeDrain = Duration(milliseconds: 250);
   static const vadWatchdog = Duration(seconds: 60);
+
+  /// How long an always-listen follow-up waits for speech before it gives up.
+  /// Home Assistant's speech detection can otherwise keep the microphone open
+  /// for its own watchdog window, which is far too long after every answer.
+  static const followupListenTimeout = Duration(seconds: 4);
   static const playbackSafety = Duration(seconds: 120);
   static const stopWordArmDelay = Duration(milliseconds: 250);
   static const noMediaAnnouncement = Duration(seconds: 3);
@@ -227,6 +237,7 @@ class VoiceSession {
   String? _playId;
   Completer<bool>? _playDone;
   Timer? _watchdog;
+  Timer? _followupTimeout;
   Timer? _linger;
 
   bool get busy => _phase != _Phase.idle;
@@ -423,7 +434,9 @@ class VoiceSession {
         _streamUrl = data['url'] ?? '';
       case VaEvent.sttStart:
         _phase = _Phase.listening;
-        _armWatchdog(gen);
+        // The STT stage starts before the microphone hears anything. Keep the
+        // follow-up window running until VAD actually hears speech.
+        _armWatchdog(gen, keepFollowup: true);
       case VaEvent.sttVadStart:
         _armWatchdog(gen);
       case VaEvent.sttVadEnd:
@@ -510,8 +523,8 @@ class VoiceSession {
     await _finish(gen, sound: 'error');
   }
 
-  void _armWatchdog(int gen) {
-    _cancelWatchdog();
+  void _armWatchdog(int gen, {bool keepFollowup = false}) {
+    _cancelWatchdog(keepFollowup: keepFollowup);
     _watchdog = Timer(vadWatchdog, () {
       if (gen != _gen) return;
       onError(
@@ -523,9 +536,24 @@ class VoiceSession {
     });
   }
 
-  void _cancelWatchdog() {
+  void _armFollowupTimeout(int gen) {
+    _cancelFollowupTimeout();
+    _followupTimeout = Timer(followupListenTimeout, () {
+      if (gen != _gen) return;
+      onTrace?.call('follow-up timed out');
+      unawaited(cancel());
+    });
+  }
+
+  void _cancelFollowupTimeout() {
+    _followupTimeout?.cancel();
+    _followupTimeout = null;
+  }
+
+  void _cancelWatchdog({bool keepFollowup = false}) {
     _watchdog?.cancel();
     _watchdog = null;
+    if (!keepFollowup) _cancelFollowupTimeout();
   }
 
   // ── the answer ─────────────────────────────────────────────────────────
@@ -638,7 +666,8 @@ class VoiceSession {
 
   Future<void> _afterAnswer(int gen, {required bool played}) async {
     if (gen != _gen) return;
-    if (_continue && played) {
+    final opts = options();
+    if ((_continue || opts.followupAlways) && played) {
       await _followUp(gen);
       return;
     }
@@ -661,6 +690,7 @@ class VoiceSession {
       _phrase = '';
     }
     _resetRun(keepConversation: true);
+    _armFollowupTimeout(gen);
     onTrace?.call('listening for a follow-up');
     // The turn that just ended stays on screen above the next one, whose
     // lines start empty. A result panel stays until a turn brings another.

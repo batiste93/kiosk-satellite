@@ -5786,6 +5786,21 @@ const voiceSeamlessWake = SettingDef<bool>(
   dependsOn: 'voice.enabled',
 );
 
+const voiceFollowupAlways = SettingDef<bool>(
+  key: 'voice.followup_always',
+  type: SettingType.boolean,
+  defaultValue: false,
+  title: 'Always listen for a follow-up',
+  description:
+      'Reopen the microphone after every answer, even when the assistant '
+      'does not ask a question. It waits up to 4 seconds for you to start '
+      'speaking.',
+  category: 'Voice Satellite',
+  subpage: 'Assistant',
+  section: 'Follow-up',
+  dependsOn: 'voice.enabled',
+);
+
 const voiceFollowupDelayMs = SettingDef<num>(
   key: 'voice.followup_delay_ms',
   type: SettingType.number,
@@ -11906,6 +11921,7 @@ const List<SettingDef<Object>> allSettings = [
   voiceEnabled,
   voiceMute,
   voiceSeamlessWake,
+  voiceFollowupAlways,
   voiceFollowupDelayMs,
   voiceFollowupChime,
   voiceTtsOutput,

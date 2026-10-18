@@ -278,6 +278,79 @@ void main() {
     });
   });
 
+  test('always listen follows up after a statement', () {
+    fakeAsync((async) {
+      final h = _Harness(
+        options: const VoiceSessionOptions(followupAlways: true),
+        time: async,
+      );
+      h.session.wake('Hey Jarvis');
+      async.elapse(const Duration(seconds: 5));
+      h.session.onEvent(VaEvent.sttEnd, {'text': 'what is the weather'});
+      // A statement, not a question: Home Assistant does not ask back.
+      h.session.onEvent(VaEvent.intentEnd, {
+        'conversation_id': 'c1',
+        'continue_conversation': '0',
+      });
+      h.session.onEvent(VaEvent.ttsStart, {'text': 'It is sunny.'});
+      h.session.onEvent(VaEvent.ttsEnd, {'url': 'http://ha/weather.mp3'});
+      async.flushMicrotasks();
+      h.session.onSoundEnded(h.player.lastId);
+      async.flushMicrotasks();
+      h.session.onEvent(VaEvent.runEnd, {});
+      async.flushMicrotasks();
+
+      // The wake word is still the pipeline pick, but the microphone opens
+      // again in the same conversation without it.
+      expect(h.link.requests.last, (true, 'Hey Jarvis'));
+      expect(h.mic.opens, 2);
+      expect(h.session.busy, isTrue);
+      expect(h.view.phase, AssistPhase.listening);
+      expect(h.view.earlier.single.answer, 'It is sunny.');
+      expect(h.traces, contains(('listening for a follow-up', null)));
+    });
+  });
+
+  test('an always-listen follow-up gives up when nobody speaks', () {
+    fakeAsync((async) {
+      final h = _Harness(
+        options: const VoiceSessionOptions(followupAlways: true),
+        time: async,
+      );
+      h.session.wake('Hey Jarvis');
+      async.elapse(const Duration(seconds: 5));
+      h.session.onEvent(VaEvent.sttEnd, {'text': 'what is the weather'});
+      h.session.onEvent(VaEvent.intentEnd, {
+        'conversation_id': 'c1',
+        'continue_conversation': '0',
+      });
+      h.session.onEvent(VaEvent.ttsStart, {'text': 'It is sunny.'});
+      h.session.onEvent(VaEvent.ttsEnd, {'url': 'http://ha/weather.mp3'});
+      async.flushMicrotasks();
+      h.session.onSoundEnded(h.player.lastId);
+      async.flushMicrotasks();
+      h.session.onEvent(VaEvent.runEnd, {});
+      async.flushMicrotasks();
+      expect(h.session.busy, isTrue);
+
+      // Home Assistant starts its STT stage before the microphone hears
+      // anything; that must not cancel the follow-up window.
+      h.session.onEvent(VaEvent.sttStart, {});
+      async.elapse(
+        VoiceSession.followupListenTimeout - const Duration(milliseconds: 1),
+      );
+      expect(h.session.busy, isTrue);
+
+      async.elapse(const Duration(milliseconds: 2));
+      async.flushMicrotasks();
+
+      expect(h.session.busy, isFalse);
+      expect(h.mic.closes, greaterThanOrEqualTo(2));
+      expect(h.idles, 1);
+      expect(h.view.phase, AssistPhase.hidden);
+    });
+  });
+
   test('the answer\'s playback clock runs from the player\'s reports', () {
     fakeAsync((async) {
       final h = _Harness(time: async);

@@ -45762,6 +45762,16 @@
     "context": "Settings > Voice Satellite > Assistant",
     "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
   },
+  "settingVoiceFollowupAlwaysTitle": "Always listen for a follow-up",
+  "@settingVoiceFollowupAlwaysTitle": {
+    "context": "Settings > Voice Satellite > Assistant",
+    "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
+  },
+  "settingVoiceFollowupAlwaysDescription": "Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.",
+  "@settingVoiceFollowupAlwaysDescription": {
+    "context": "Settings > Voice Satellite > Assistant",
+    "description": "Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged."
+  },
   "settingVoiceTtsOutputTitle": "Play sounds on",
   "@settingVoiceTtsOutputTitle": {
     "context": "Settings > Voice Satellite > Assistant",

@@ -12254,6 +12254,13 @@ class UiStringsNl extends UiStrings {
       'Speel het wekgeluid af wanneer er opnieuw wordt geluisterd.';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.';
+
+  @override
   String get settingVoiceTtsOutputTitle => 'Geluiden afspelen op';
 
   @override

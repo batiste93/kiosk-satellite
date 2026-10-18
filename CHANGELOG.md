@@ -4,6 +4,9 @@ All notable changes to Kiosk Satellite are documented here. Full release notes f
 
 ## Unreleased
 
+### Added
+- **Always listen for a follow-up.** A new setting under **Voice Satellite > Assistant > Follow-up** reopens the microphone after every answer, not only when the assistant asks a question. The next turn keeps the same Home Assistant conversation, so a follow-up such as "what about Friday?" needs no wake word. It waits up to 4 seconds for speech, then returns to the wake word; it is off by default.
+
 ### Changed
 - **Echo Dot Action button without the accessibility service.** On a system that sends the Echo Dot's Action button as a broadcast, such as the Kiosk Satellite Edition build of its LineageOS port, Kiosk Satellite takes the button from that broadcast. The button service no longer has to be switched on over adb, and the Dot no longer needs a reboot after setup before the button works. On other systems the button service works as before.
 

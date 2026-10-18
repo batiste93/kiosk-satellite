@@ -1716,6 +1716,10 @@ const settingMessageIds = <String, Map<String, String>>{
     "title": "settingVoiceFollowupChimeTitle",
     "description": "settingVoiceFollowupChimeDescription",
   },
+  "voice.followup_always": {
+    "title": "settingVoiceFollowupAlwaysTitle",
+    "description": "settingVoiceFollowupAlwaysDescription",
+  },
   "voice.tts_output": {
     "title": "settingVoiceTtsOutputTitle",
     "description": "settingVoiceTtsOutputDescription",
