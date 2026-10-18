@@ -12248,7 +12248,7 @@ class UiStringsUk extends UiStrings {
 
   @override
   String get settingVoiceFollowupAlwaysDescription =>
-      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+      'Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.';
 
   @override
   String get settingVoiceTtsOutputTitle => 'Відтворювати звуки на';

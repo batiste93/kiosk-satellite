@@ -21050,7 +21050,7 @@ abstract class UiStrings {
   /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.
   ///
   /// In en, this message translates to:
-  /// **'Reopen the microphone after every answer, even when the assistant does not ask a question.'**
+  /// **'Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.'**
   String get settingVoiceFollowupAlwaysDescription;
 
   /// Translate the visible label or help. Keep Voice Satellite, Kiosk Satellite, Home Assistant, ESPHome, HACS and model names unchanged.

@@ -5793,7 +5793,8 @@ const voiceFollowupAlways = SettingDef<bool>(
   title: 'Always listen for a follow-up',
   description:
       'Reopen the microphone after every answer, even when the assistant '
-      'does not ask a question.',
+      'does not ask a question. It waits up to 4 seconds for you to start '
+      'speaking.',
   category: 'Voice Satellite',
   subpage: 'Assistant',
   section: 'Follow-up',

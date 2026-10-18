@@ -311,6 +311,40 @@ void main() {
     });
   });
 
+  test('an always-listen follow-up gives up when nobody speaks', () {
+    fakeAsync((async) {
+      final h = _Harness(
+        options: const VoiceSessionOptions(followupAlways: true),
+        time: async,
+      );
+      h.session.wake('Hey Jarvis');
+      async.elapse(const Duration(seconds: 5));
+      h.session.onEvent(VaEvent.sttEnd, {'text': 'what is the weather'});
+      h.session.onEvent(VaEvent.intentEnd, {
+        'conversation_id': 'c1',
+        'continue_conversation': '0',
+      });
+      h.session.onEvent(VaEvent.ttsStart, {'text': 'It is sunny.'});
+      h.session.onEvent(VaEvent.ttsEnd, {'url': 'http://ha/weather.mp3'});
+      async.flushMicrotasks();
+      h.session.onSoundEnded(h.player.lastId);
+      async.flushMicrotasks();
+      h.session.onEvent(VaEvent.runEnd, {});
+      async.flushMicrotasks();
+      expect(h.session.busy, isTrue);
+
+      async.elapse(
+        VoiceSession.followupListenTimeout + const Duration(milliseconds: 1),
+      );
+      async.flushMicrotasks();
+
+      expect(h.session.busy, isFalse);
+      expect(h.mic.closes, greaterThanOrEqualTo(2));
+      expect(h.idles, 1);
+      expect(h.view.phase, AssistPhase.hidden);
+    });
+  });
+
   test('the answer\'s playback clock runs from the player\'s reports', () {
     fakeAsync((async) {
       final h = _Harness(time: async);

@@ -11484,7 +11484,7 @@ class UiStringsZh extends UiStrings {
 
   @override
   String get settingVoiceFollowupAlwaysDescription =>
-      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+      'Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.';
 
   @override
   String get settingVoiceTtsOutputTitle => '声音播放设备';
@@ -24907,7 +24907,7 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get settingVoiceFollowupAlwaysDescription =>
-      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+      'Reopen the microphone after every answer, even when the assistant does not ask a question. It waits up to 4 seconds for you to start speaking.';
 
   @override
   String get settingVoiceTtsOutputTitle => '声音播放设备';
