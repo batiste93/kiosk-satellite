@@ -333,9 +333,15 @@ void main() {
       async.flushMicrotasks();
       expect(h.session.busy, isTrue);
 
+      // Home Assistant starts its STT stage before the microphone hears
+      // anything; that must not cancel the follow-up window.
+      h.session.onEvent(VaEvent.sttStart, {});
       async.elapse(
-        VoiceSession.followupListenTimeout + const Duration(milliseconds: 1),
+        VoiceSession.followupListenTimeout - const Duration(milliseconds: 1),
       );
+      expect(h.session.busy, isTrue);
+
+      async.elapse(const Duration(milliseconds: 2));
       async.flushMicrotasks();
 
       expect(h.session.busy, isFalse);

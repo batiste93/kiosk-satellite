@@ -434,7 +434,9 @@ class VoiceSession {
         _streamUrl = data['url'] ?? '';
       case VaEvent.sttStart:
         _phase = _Phase.listening;
-        _armWatchdog(gen);
+        // The STT stage starts before the microphone hears anything. Keep the
+        // follow-up window running until VAD actually hears speech.
+        _armWatchdog(gen, keepFollowup: true);
       case VaEvent.sttVadStart:
         _armWatchdog(gen);
       case VaEvent.sttVadEnd:
@@ -521,8 +523,8 @@ class VoiceSession {
     await _finish(gen, sound: 'error');
   }
 
-  void _armWatchdog(int gen) {
-    _cancelWatchdog();
+  void _armWatchdog(int gen, {bool keepFollowup = false}) {
+    _cancelWatchdog(keepFollowup: keepFollowup);
     _watchdog = Timer(vadWatchdog, () {
       if (gen != _gen) return;
       onError(
@@ -548,10 +550,10 @@ class VoiceSession {
     _followupTimeout = null;
   }
 
-  void _cancelWatchdog() {
+  void _cancelWatchdog({bool keepFollowup = false}) {
     _watchdog?.cancel();
     _watchdog = null;
-    _cancelFollowupTimeout();
+    if (!keepFollowup) _cancelFollowupTimeout();
   }
 
   // ── the answer ─────────────────────────────────────────────────────────
