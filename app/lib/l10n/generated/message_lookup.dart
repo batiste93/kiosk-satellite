@@ -4089,6 +4089,10 @@ String messageById(UiStrings strings, String? id, String fallback) =>
         strings.settingVoiceFollowupChimeTitle,
       'settingVoiceFollowupChimeDescription' =>
         strings.settingVoiceFollowupChimeDescription,
+      'settingVoiceFollowupAlwaysTitle' =>
+        strings.settingVoiceFollowupAlwaysTitle,
+      'settingVoiceFollowupAlwaysDescription' =>
+        strings.settingVoiceFollowupAlwaysDescription,
       'settingVoiceTtsOutputTitle' => strings.settingVoiceTtsOutputTitle,
       'settingVoiceTtsOutputDescription' =>
         strings.settingVoiceTtsOutputDescription,

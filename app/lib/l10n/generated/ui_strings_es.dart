@@ -12360,6 +12360,13 @@ class UiStringsEs extends UiStrings {
       'Reproduce el sonido de activación cuando vuelve a escuchar.';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+
+  @override
   String get settingVoiceTtsOutputTitle => 'Reproducir sonidos en';
 
   @override

@@ -12391,6 +12391,13 @@ class UiStringsDe extends UiStrings {
       'Spielt den Aktivierungston, wenn wieder zugehört wird.';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+
+  @override
   String get settingVoiceTtsOutputTitle => 'Töne abspielen auf';
 
   @override

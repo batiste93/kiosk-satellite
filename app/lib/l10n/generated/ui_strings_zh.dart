@@ -11480,6 +11480,13 @@ class UiStringsZh extends UiStrings {
   String get settingVoiceFollowupChimeDescription => '重新开始聆听时播放唤醒提示音。';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+
+  @override
   String get settingVoiceTtsOutputTitle => '声音播放设备';
 
   @override
@@ -24894,6 +24901,13 @@ class UiStringsZhCn extends UiStringsZh {
 
   @override
   String get settingVoiceFollowupChimeDescription => '重新开始聆听时播放唤醒提示音。';
+
+  @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
 
   @override
   String get settingVoiceTtsOutputTitle => '声音播放设备';

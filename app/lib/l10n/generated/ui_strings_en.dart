@@ -12112,6 +12112,13 @@ class UiStringsEn extends UiStrings {
       'Play the wake sound when it starts listening again.';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+
+  @override
   String get settingVoiceTtsOutputTitle => 'Play sounds on';
 
   @override

@@ -71,6 +71,7 @@ class VoiceSessionOptions {
   const VoiceSessionOptions({
     this.seamless = false,
     this.wakeSound = true,
+    this.followupAlways = false,
     this.followupDelayMs = 0,
     this.followupChime = false,
     this.answerLingerSeconds = 0,
@@ -82,6 +83,10 @@ class VoiceSessionOptions {
 
   final bool seamless;
   final bool wakeSound;
+
+  /// Listen again after every played answer, not only when Home Assistant
+  /// marks the answer as a question (`continue_conversation`).
+  final bool followupAlways;
   final int followupDelayMs;
   final bool followupChime;
   final int answerLingerSeconds;
@@ -638,7 +643,8 @@ class VoiceSession {
 
   Future<void> _afterAnswer(int gen, {required bool played}) async {
     if (gen != _gen) return;
-    if (_continue && played) {
+    final opts = options();
+    if ((_continue || opts.followupAlways) && played) {
       await _followUp(gen);
       return;
     }

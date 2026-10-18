@@ -294,6 +294,7 @@ class VoiceManager extends Manager {
   VoiceSessionOptions _options() => VoiceSessionOptions(
     seamless: _settings.get(defs.voiceSeamlessWake),
     wakeSound: _settings.get(defs.voiceWakeSound),
+    followupAlways: _settings.get(defs.voiceFollowupAlways),
     followupDelayMs: _settings.get(defs.voiceFollowupDelayMs).toInt(),
     followupChime: _settings.get(defs.voiceFollowupChime),
     answerLingerSeconds: _settings.get(defs.voiceAnswerLinger).toInt(),

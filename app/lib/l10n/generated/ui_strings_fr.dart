@@ -12353,6 +12353,13 @@ class UiStringsFr extends UiStrings {
       'Joue le son de réveil quand l\'écoute reprend.';
 
   @override
+  String get settingVoiceFollowupAlwaysTitle => 'Always listen for a follow-up';
+
+  @override
+  String get settingVoiceFollowupAlwaysDescription =>
+      'Reopen the microphone after every answer, even when the assistant does not ask a question.';
+
+  @override
   String get settingVoiceTtsOutputTitle => 'Jouer les sons sur';
 
   @override
